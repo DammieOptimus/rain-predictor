@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rain Predictor</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons (Optional but nice) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <div class="container">
+        <div id="weather-card" class="weather-card">
+            <div class="loading" id="loading">
+                <i class="fas fa-spinner fa-spin"></i> Finding your location & weather...
+            </div>
+
+            <div class="content" id="content" style="display: none;">
+                <div class="location" id="location">
+                    <i class="fas fa-map-marker-alt"></i> <span>Fetching...</span>
+                </div>
+
+                <div class="status" id="status">
+                    <h2>Checking...</h2>
+                </div>
+
+                <div class="details" id="details">
+                    <!-- Details like temp, humidity will go here if needed -->
+                </div>
+
+                <div class="forecast" id="forecast">
+                    <!-- Rain forecast details will appear here -->
+                </div>
+
+                <div class="current-weather" id="current-weather">
+                    <!-- Current condition details -->
+                </div>
+
+                <div class="last-updated" id="last-updated">
+                    Last updated: <span>Never</span>
+                </div>
+            </div>
+
+            <div class="error" id="error" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>Could not fetch weather data. Please ensure location services are enabled and refresh.</p>
+                <span id="error-message"></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
