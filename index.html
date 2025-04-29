@@ -1,21 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rain Predictor</title>
+    <title>Proactive Rain Predictor - Dammie Optimus Solutions</title> <!-- Updated Title -->
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for Icons (Optional but nice) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-
 <body>
+
+    <!-- Header Section -->
+    <header class="app-header">
+        <h2 class="business-name">Dammie Optimus Solutions</h2>
+        <h1 class="app-name">Proactive Rain Predictor</h1>
+        <p class="app-purpose">
+            Stay ahead of the weather! This app automatically checks your local forecast
+            and alerts you proactively if rain is expected soon, so you can always be prepared.
+        </p>
+    </header>
+
     <div class="container">
         <div id="weather-card" class="weather-card">
             <div class="loading" id="loading">
@@ -32,31 +39,35 @@
                 </div>
 
                 <div class="details" id="details">
-                    <!-- Details like temp, humidity will go here if needed -->
+                    <!-- Details like temp, humidity can be added here later if needed -->
                 </div>
 
                 <div class="forecast" id="forecast">
                     <!-- Rain forecast details will appear here -->
                 </div>
 
-                <div class="current-weather" id="current-weather">
-                    <!-- Current condition details -->
-                </div>
+                 <div class="current-weather" id="current-weather">
+                     <!-- Current condition details -->
+                 </div>
 
-                <div class="last-updated" id="last-updated">
+                 <div class="last-updated" id="last-updated">
                     Last updated: <span>Never</span>
-                </div>
+                 </div>
             </div>
 
             <div class="error" id="error" style="display: none;">
                 <i class="fas fa-exclamation-triangle"></i>
-                <p>Could not fetch weather data. Please ensure location services are enabled and refresh.</p>
+                <p>Could not fetch weather data. Please ensure location services are enabled and refreshed.</p>
                 <span id="error-message"></span>
             </div>
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>© <span id="copyright-year"></span> Dammie Optimus Solutions. All rights reserved.</p>
+    </footer>
+
     <script src="script.js"></script>
 </body>
-
 </html>
