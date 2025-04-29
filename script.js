@@ -1,14 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const apiKey = "9cb2794cd1e350280b8d6efe7551b87b";
 
-    // --- Set Copyright Year ---
+    // Set Copyright Year
     const copyrightYearSpan = document.getElementById('copyright-year');
-    if (copyrightYearSpan) {
-        copyrightYearSpan.textContent = new Date().getFullYear();
-    }
-    // --- End Copyright Year ---
+    if (copyrightYearSpan) { copyrightYearSpan.textContent = new Date().getFullYear(); }
 
     // DOM Elements
+    const weatherCard = document.getElementById('weather-card');
     const loadingDiv = document.getElementById('loading');
     const contentDiv = document.getElementById('content');
     const errorDiv = document.getElementById('error');
@@ -19,49 +17,52 @@ document.addEventListener('DOMContentLoaded', () => {
     const forecastDiv = document.getElementById('forecast');
     const currentWeatherDiv = document.getElementById('current-weather');
     const lastUpdatedSpan = document.querySelector('#last-updated span');
-    const weatherCard = document.getElementById('weather-card');
     const body = document.body;
 
     // Configuration
-    const refreshIntervalMinutes = 15; // How often to check for new weather data
-    const rainSoonHours = 3; // How many hours ahead to check for rain (max depends on API)
-    const rainProbabilityThreshold = 0.3; // Probability of Precipitation (POP) threshold (30%)
+    const refreshIntervalMinutes = 15;
+    const rainSoonHours = 3;
+    const rainProbabilityThreshold = 0.3;
+
+    // --- State Display Function ---
+    function showState(state) { // 'loading', 'content', 'error'
+        loadingDiv.style.display = 'none';
+        contentDiv.style.display = 'none';
+        errorDiv.style.display = 'none';
+
+        if (state === 'loading') loadingDiv.style.display = 'flex';
+        else if (state === 'content') contentDiv.style.display = 'flex';
+        else if (state === 'error') errorDiv.style.display = 'flex';
+    }
+
 
     // --- Core Functions ---
-
     function getUserLocation() {
         if (!navigator.geolocation) {
             handleError("Geolocation is not supported by your browser.");
             return;
         }
 
-        // Don't show loading overlay if content is already visible (for background refresh)
-        if (contentDiv.style.display !== 'flex') {
-             loadingDiv.style.display = 'flex';
-             contentDiv.style.display = 'none';
-             errorDiv.style.display = 'none';
-        } else {
-             // Optionally show a subtle refresh indicator somewhere if needed
+        // Show loading only if content isn't already visible OR if error is visible
+        if (contentDiv.style.display !== 'flex' || errorDiv.style.display === 'flex') {
+             showState('loading');
         }
-
 
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const { latitude, longitude } = position.coords;
-                // Clear previous error message if location is now successful
-                if (errorDiv.style.display === 'flex') {
-                    errorDiv.style.display = 'none';
+                 if (errorDiv.style.display === 'flex') { // Clear previous error message visually
                     errorMessageSpan.textContent = '';
-                }
+                 }
                 getWeatherData(latitude, longitude);
             },
             (error) => {
-                // Avoid showing error if content is already displayed (maybe connection issue during refresh)
-                if (contentDiv.style.display !== 'flex') {
+                if (contentDiv.style.display !== 'flex') { // Only show full error on initial load fail
                     handleError(`Geolocation error: ${error.message}`);
                 } else {
                     console.warn(`Geolocation error during refresh: ${error.message}`);
-                    // Optionally update 'last updated' with a warning?
+                    // Optionally update 'last updated' to show refresh failed state without blocking UI
+                     lastUpdatedSpan.textContent = `${new Date().toLocaleTimeString()} (Loc fail)`;
                 }
             }
         );
@@ -72,10 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentApiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
 
         try {
-            // Update loading text only if it's the initial load
+            // Ensure loading indicator text is updated if visible
             if (loadingDiv.style.display === 'flex') {
                 loadingDiv.querySelector('i').classList.add('fa-spin');
-                loadingDiv.lastChild.textContent = ' Fetching latest weather data...';
+                // Text already shortened in HTML
             }
 
             const [currentResponse, forecastResponse] = await Promise.all([
@@ -83,19 +84,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 fetch(forecastApiUrl)
             ]);
 
-            // Combine error checking
             if (!currentResponse.ok || !forecastResponse.ok) {
                 let errorMessages = [];
-                if (!currentResponse.ok) {
-                    let msg = `Current Weather Error ${currentResponse.status}`;
-                    try { msg += `: ${(await currentResponse.json()).message}`; } catch (e) {}
-                    errorMessages.push(msg);
-                }
-                 if (!forecastResponse.ok) {
-                    let msg = `Forecast Error ${forecastResponse.status}`;
-                    try { msg += `: ${(await forecastResponse.json()).message}`; } catch (e) {}
-                    errorMessages.push(msg);
-                }
+                if (!currentResponse.ok) errorMessages.push(`Current: ${currentResponse.status}`);
+                if (!forecastResponse.ok) errorMessages.push(`Forecast: ${forecastResponse.status}`);
+                 try { // Try to get message body if possible
+                    if (!currentResponse.ok) errorMessages[0] += `: ${(await currentResponse.json()).message}`;
+                     if (!forecastResponse.ok && errorMessages.length > (currentResponse.ok ? 0:1) ) errorMessages[errorMessages.length-1] += `: ${(await forecastResponse.json()).message}`;
+                 } catch (e) {}
                 throw new Error(errorMessages.join('; '));
             }
 
@@ -104,20 +100,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             processWeatherData(currentData, forecastData);
 
-            // Ensure correct display state after successful fetch
-            loadingDiv.style.display = 'none';
-            contentDiv.style.display = 'flex'; // Use flex as defined in CSS
-            errorDiv.style.display = 'none';
+            showState('content'); // Show content on success
 
         } catch (error) {
             console.error("Weather fetch error:", error);
-            // Avoid showing full error overlay if content is already displayed
-            if (contentDiv.style.display !== 'flex') {
-                 handleError(error.message);
+            if (contentDiv.style.display !== 'flex') { // Only show full error on initial load fail
+                 handleError(`Weather data error: ${error.message}`);
             } else {
                  console.warn(`Weather fetch error during refresh: ${error.message}`);
-                 // Optionally update 'last updated' with an error/warning status
-                 lastUpdatedSpan.textContent = `${new Date().toLocaleTimeString()} (Update failed)`;
+                 lastUpdatedSpan.textContent = `${new Date().toLocaleTimeString()} (API fail)`;
             }
         }
     }
@@ -132,31 +123,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentIconCode = currentData.weather[0].icon;
         const feelsLike = Math.round(currentData.main.feels_like);
         const humidity = currentData.main.humidity;
-        const windSpeed = currentData.wind.speed; // m/s
+        const windSpeed = currentData.wind.speed;
 
         currentWeatherDiv.innerHTML = `
-            <p><i class="fas fa-thermometer-half"></i> Now: <strong>${currentTemp}°C</strong> (Feels like ${feelsLike}°C)</p>
-            <p><i class="fas fa-info-circle"></i> Condition: ${capitalizeFirstLetter(currentDesc)} <img src="https://openweathermap.org/img/wn/${currentIconCode}.png" alt="Weather icon"></p>
+            <p><i class="fas fa-thermometer-half"></i> Now: <strong>${currentTemp}°C</strong> (Feels ${feelsLike}°C)</p> <!-- Shortened -->
+            <p><i class="fas fa-info-circle"></i> ${capitalizeFirstLetter(currentDesc)} <img src="https://openweathermap.org/img/wn/${currentIconCode}.png" alt=""></p> <!-- Shortened -->
             <p><i class="fas fa-tint"></i> Humidity: ${humidity}%</p>
             <p><i class="fas fa-wind"></i> Wind: ${windSpeed.toFixed(1)} m/s</p>
         `;
 
-
-        // 3. Analyze Forecast for Rain Prediction
+        // 3. Analyze Forecast for Rain Prediction (Logic remains the same)
         const now = new Date();
         const forecastList = forecastData.list;
         let isCurrentlyRaining = /rain|drizzle|thunderstorm/i.test(currentData.weather[0].main);
         let rainExpectedTime = null;
         let nextRainIntensity = "";
-
         const checkUntilTimestamp = now.getTime() / 1000 + rainSoonHours * 60 * 60;
 
         for (const forecast of forecastList) {
             const forecastTimestamp = forecast.dt;
-            // Only check future forecasts within our window
             if (forecastTimestamp > now.getTime() / 1000 && forecastTimestamp <= checkUntilTimestamp) {
                  const pop = forecast.pop || 0;
-
                  const isRainyForecast = forecast.weather.some(w =>
                      /rain|drizzle|thunderstorm/i.test(w.main) ||
                      [500, 501, 502, 503, 504, 511, 520, 521, 522, 531,
@@ -167,22 +154,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (isRainyForecast && pop >= rainProbabilityThreshold) {
                     rainExpectedTime = new Date(forecastTimestamp * 1000);
-                    // Determine intensity (basic)
                     if (forecast.rain && forecast.rain['3h']) {
                         const rainVol = forecast.rain['3h'];
                         if (rainVol < 1) nextRainIntensity = " (light)";
                         else if (rainVol < 5) nextRainIntensity = " (moderate)";
                         else nextRainIntensity = " (heavy)";
                     } else if (forecast.weather.some(w => /thunderstorm/i.test(w.main))) {
-                         nextRainIntensity = " (possible thunderstorms)";
+                         nextRainIntensity = " (storms)"; // Shortened
                     } else if (isRainyForecast) {
-                         // Default to light if specific volume unknown but rain expected
                          nextRainIntensity = " (light)";
                     }
-                    break; // Found the first significant rain event
+                    break;
                 }
             }
-             // Optimization: Stop checking if forecast time exceeds our window
              if (forecastTimestamp > checkUntilTimestamp) break;
         }
 
@@ -190,31 +174,31 @@ document.addEventListener('DOMContentLoaded', () => {
         updateUI(isCurrentlyRaining, rainExpectedTime, nextRainIntensity);
 
         // 5. Update Last Updated Time
-        lastUpdatedSpan.textContent = new Date().toLocaleTimeString();
+        lastUpdatedSpan.textContent = `Updated: ${new Date().toLocaleTimeString()}`; // Shortened
     }
 
     function updateUI(isCurrentlyRaining, rainExpectedTime, intensity) {
-         body.classList.remove('state-clear', 'state-rain-soon', 'state-raining');
-         weatherCard.classList.remove('state-clear', 'state-rain-soon', 'state-raining');
+         body.className = ''; // Clear all body classes first
+         weatherCard.classList.remove('state-clear', 'state-rain-soon', 'state-raining'); // Clear card state
 
         if (isCurrentlyRaining) {
-            statusH2.innerHTML = `<i class="fas fa-cloud-showers-heavy"></i> It's Raining Now`;
-            forecastDiv.innerHTML = `<p>Seek shelter or grab an umbrella!</p>`;
+            statusH2.innerHTML = `<i class="fas fa-cloud-showers-heavy"></i> Raining Now`; // Shortened
+            forecastDiv.innerHTML = `<p>Grab an umbrella!</p>`; // Shortened
             body.classList.add('state-raining');
             weatherCard.classList.add('state-raining');
         } else if (rainExpectedTime) {
-            const timeFormatter = new Intl.DateTimeFormat('en', { hour: 'numeric', minute: '2-digit', hour12: true });
+            const timeFormatter = new Intl.DateTimeFormat('en', { hour: 'numeric', minute: '2-digit', hour12: false }); // Use 24hr maybe?
             const formattedTime = timeFormatter.format(rainExpectedTime);
             const dayFormatter = new Intl.DateTimeFormat('en', { weekday: 'short' });
-            const formattedDay = isToday(rainExpectedTime) ? "today" : `on ${dayFormatter.format(rainExpectedTime)}`;
+            const formattedDay = isToday(rainExpectedTime) ? "" : ` ${dayFormatter.format(rainExpectedTime)}`; // Show day only if not today
 
             statusH2.innerHTML = `<i class="fas fa-cloud-rain"></i> Rain Expected Soon!`;
-            forecastDiv.innerHTML = `<p>Prepare for${intensity} rain around <strong>${formattedTime} ${formattedDay}</strong>.</p>`;
+            forecastDiv.innerHTML = `<p>Expect${intensity} rain ~<strong>${formattedTime}${formattedDay}</strong>.</p>`; // Shortened
             body.classList.add('state-rain-soon');
              weatherCard.classList.add('state-rain-soon');
         } else {
-            statusH2.innerHTML = `<i class="fas fa-sun"></i> No Rain Expected Soon`;
-            forecastDiv.innerHTML = `<p>Looks clear for the next ${rainSoonHours} hours. Enjoy!</p>`;
+            statusH2.innerHTML = `<i class="fas fa-sun"></i> No Rain Expected`; // Shortened
+            forecastDiv.innerHTML = `<p>Clear for the next ${rainSoonHours} hours.</p>`; // Shortened
             body.classList.add('state-clear');
             weatherCard.classList.add('state-clear');
         }
@@ -222,21 +206,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleError(message) {
         console.error("Handler Error:", message);
-        loadingDiv.style.display = 'none';
-        contentDiv.style.display = 'none';
-        errorDiv.style.display = 'flex'; // Use flex as defined in CSS
-        errorMessageSpan.textContent = `Error: ${message}. Please check console for details, ensure location is enabled, and API key is correct.`;
-        body.classList.remove('state-clear', 'state-rain-soon', 'state-raining'); // Reset background
-        body.style.background = ''; // Ensure default background applies if specific classes removed
+        errorMessageSpan.textContent = `Error: ${message}`; // Display error message
+        showState('error'); // Show error view
+        body.className = ''; // Reset body classes/background
+        body.style.background = ''; // Ensure default background
     }
 
     // --- Helper Functions ---
-    function capitalizeFirstLetter(string) {
+    function capitalizeFirstLetter(string) { /* ... same as before ... */
         if (!string) return '';
         return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
-    function isToday(someDate) {
+     }
+    function isToday(someDate) { /* ... same as before ... */
         const today = new Date();
         return someDate.getDate() == today.getDate() &&
             someDate.getMonth() == today.getMonth() &&
@@ -245,7 +226,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Initialization & Auto-Refresh ---
     getUserLocation(); // Initial load
-
-    // Set interval to automatically refresh weather data
     setInterval(getUserLocation, refreshIntervalMinutes * 60 * 1000);
 });
