@@ -1,36 +1,43 @@
 :root {
-    /* Base Values (Mobile First) */
-    --bg-clear: linear-gradient(to bottom, #87CEEB, #5F9EA0);
-    --bg-rain-soon: linear-gradient(to bottom, #B0C4DE, #778899);
-    --bg-raining: linear-gradient(to bottom, #708090, #4682B4);
-    --bg-loading: linear-gradient(to bottom, #f0f0f0, #dcdcdc);
-    --card-bg: rgba(255, 255, 255, 0.88);
-    --text-color: #333;
-    --text-color-light: #f8f8f8;
-    --header-text-color: rgba(255, 255, 255, 0.95);
-    --accent-color: #4682B4;
-    --error-color: #DC143C;
-    --shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-    --text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    --border-radius: 15px; /* Slightly larger radius again */
+    /* --- Dark Mode Palette --- */
+    --bg-clear: linear-gradient(to bottom, #2c3e50, #1a252f); /* Dark slate blue to very dark blue */
+    --bg-rain-soon: linear-gradient(to bottom, #434343, #242424); /* Dark grey gradient */
+    --bg-raining: linear-gradient(to bottom, #3a506b, #1c2b3a); /* Deeper stormy blue */
+    --bg-loading: linear-gradient(to bottom, #333333, #1a1a1a); /* Dark grey loading */
 
-    /* Define base vertical padding/margin using vh but clamp it */
-    /* Keep minimums small, allow decent maximums */
+    --card-bg: rgba(45, 55, 72, 0.9); /* Dark semi-transparent card (darker slate) */
+    --card-border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle light border for definition */
+
+    --text-color: #e8e8e8; /* Light grey for main text (less harsh than pure white) */
+    --text-color-medium: #b0b0b0; /* Medium light grey for secondary info */
+    --text-color-low: #888; /* Darker grey for less important info */
+    --header-text-color: #ffffff; /* Pure white for main headers */
+
+    --accent-color: #34aadc; /* Bright cyan/blue accent */
+    --error-color: #ff6b6b; /* Bright, softer red for errors */
+    --shadow: none; /* Remove box shadow, using border instead */
+    --text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); /* Subtle dark text shadow for depth */
+    --border-radius: 15px;
+
+    /* --- State Specific Accent Colors (Vivid) --- */
+    --accent-clear: #50fa7b; /* Bright Green */
+    --accent-rain-soon: #f1fa8c; /* Bright Yellow */
+    --accent-raining: #8be9fd; /* Bright Cyan */
+
+    /* --- Font Sizes & Spacing (Inherited from previous step) --- */
     --base-vertical-space: clamp(10px, 2vh, 30px);
     --header-bottom-margin: clamp(10px, 2.5vh, 40px);
-    --card-padding-vertical: clamp(15px, 3vh, 35px); /* Allow more vertical padding */
-    --card-padding-horizontal: clamp(15px, 5vw, 45px); /* Allow more horizontal padding */
+    --card-padding-vertical: clamp(15px, 3vh, 35px);
+    --card-padding-horizontal: clamp(15px, 5vw, 45px);
     --footer-padding-vertical: clamp(8px, 1.5vh, 20px);
 
-     /* Define base font sizes using vw/vh but clamp them */
-     /* Increased MAX values significantly */
     --font-size-business: clamp(1.1em, 2.2vh, 1.8em);
-    --font-size-appname: clamp(1.5em, 3.5vh, 2.8em); /* Much larger max */
-    --font-size-purpose: clamp(0.8em, 1.8vh, 1.05em); /* Larger max */
-    --font-size-status: clamp(1.3em, 3vh, 2.4em);    /* Much larger max */
-    --font-size-location: clamp(0.9em, 2vh, 1.2em);  /* Larger max */
-    --font-size-details: clamp(0.8em, 1.8vh, 1.05em); /* Larger max */
-    --font-size-current: clamp(0.75em, 1.7vh, 1em); /* Larger max */
+    --font-size-appname: clamp(1.5em, 3.5vh, 2.8em);
+    --font-size-purpose: clamp(0.8em, 1.8vh, 1.05em);
+    --font-size-status: clamp(1.4em, 3.2vh, 2.6em); /* Slightly increased base */
+    --font-size-location: clamp(0.9em, 2vh, 1.2em);
+    --font-size-details: clamp(0.85em, 1.9vh, 1.1em); /* Slightly increased base */
+    --font-size-current: clamp(0.8em, 1.8vh, 1.05em); /* Slightly increased base */
     --font-size-updated: clamp(0.7em, 1.5vh, 0.85em);
     --font-size-footer: clamp(0.7em, 1.5vh, 0.9em);
 }
@@ -43,7 +50,7 @@
 
 html, body {
     height: 100%;
-    overflow: hidden; /* Still attempt no-scroll */
+    overflow: hidden;
 }
 
 body {
@@ -52,48 +59,51 @@ body {
     flex-direction: column;
     align-items: center;
     background: var(--bg-loading);
-    color: var(--text-color);
+    color: var(--text-color); /* Default text color is now light */
     transition: background 0.8s ease-in-out;
-    padding: 0 10px; /* Slightly more base horizontal padding */
+    padding: 0 10px;
+    font-weight: 400; /* Base font weight */
 }
 
 /* Header Section Styling */
 .app-header {
     text-align: center;
     width: 95%;
-    max-width: 800px; /* Allow header text to span wider */
+    max-width: 800px;
     margin-top: var(--base-vertical-space);
     margin-bottom: var(--header-bottom-margin);
-    color: var(--header-text-color);
+    color: var(--header-text-color); /* Uses bright white */
     flex-shrink: 0;
 }
 
 .business-name {
     font-size: var(--font-size-business);
-    font-weight: 700;
+    font-weight: 600; /* Slightly bolder */
     text-shadow: var(--text-shadow);
     letter-spacing: 0.5px;
     margin-bottom: clamp(3px, 0.5vh, 8px);
-    opacity: 0.9;
+    opacity: 0.85; /* Slightly less emphasis than app name */
+    color: var(--text-color); /* Use standard light text */
 }
 
 .app-name {
     font-size: var(--font-size-appname);
-    font-weight: 600;
+    font-weight: 700; /* Bolder */
     text-shadow: var(--text-shadow);
     margin-bottom: clamp(8px, 1.5vh, 20px);
-    color: white;
+    color: var(--header-text-color); /* Bright white */
 }
 
 .app-purpose {
     font-size: var(--font-size-purpose);
-    font-weight: 300;
+    font-weight: 400; /* Normal weight */
     line-height: 1.6;
     opacity: 0.9;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-    max-width: 650px; /* Wider paragraph allowed */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    max-width: 650px;
     margin-left: auto;
     margin-right: auto;
+    color: var(--text-color-medium); /* Use medium light grey */
 }
 
 /* Container to center the card */
@@ -105,21 +115,21 @@ body {
     flex-grow: 1;
     overflow: hidden;
     min-height: 0;
-    padding: 10px 0; /* More vertical padding */
+    padding: 10px 0;
 }
 
 .weather-card {
     background: var(--card-bg);
-    padding: var(--card-padding-vertical) var(--card-padding-horizontal); /* Use vars */
+    padding: var(--card-padding-vertical) var(--card-padding-horizontal);
     border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow); /* Uses variable (none) */
+    border: var(--card-border); /* Add subtle border */
     text-align: center;
-    /* Adjust widths based on screen size */
     min-width: 290px;
-    width: 90%; /* Default relative width */
-    max-width: 500px; /* Default max-width (mobile/tablet) */
-    backdrop-filter: blur(4px);
-    transition: background 0.5s ease, max-width 0.3s ease; /* Added max-width transition */
+    width: 90%;
+    max-width: 500px; /* Keep mobile max-width */
+    backdrop-filter: blur(5px); /* Slightly more blur */
+    transition: background 0.5s ease, max-width 0.3s ease, border-color 0.5s ease;
     overflow: hidden;
     max-height: 95%;
     display: flex;
@@ -136,86 +146,89 @@ body {
      justify-content: center;
      align-items: center;
      width: 100%;
-     padding: 5px 0; /* Internal padding for breathing room */
+     padding: 5px 0;
 }
-/* JS will set the correct one to display: flex */
-
 
 /* --- Loading State --- */
 .loading {
-    gap: clamp(10px, 2vh, 20px); /* More gap */
+    gap: clamp(10px, 2vh, 20px);
     font-size: var(--font-size-details);
-    color: #555;
+    color: var(--text-color-medium); /* Use medium light grey */
 }
 .loading i {
-    font-size: clamp(2em, 5vh, 3.5em); /* Larger spinner */
-    color: var(--accent-color);
+    font-size: clamp(2em, 5vh, 3.5em);
+    color: var(--accent-color); /* Use bright accent */
 }
 
 /* --- Content Styling --- */
 .content {
-    gap: clamp(8px, 1.8vh, 18px); /* Increased gap */
+    gap: clamp(8px, 1.8vh, 18px);
 }
 
 .location {
     font-size: var(--font-size-location);
-    font-weight: 300;
-    color: #555;
+    font-weight: 400; /* Normal weight */
+    color: var(--text-color-medium); /* Medium light grey */
 }
-.location i { margin-right: 7px; color: var(--accent-color); } /* More spacing */
+.location i { margin-right: 7px; color: var(--accent-color); } /* Accent color icon */
 
 .status h2 {
     font-size: var(--font-size-status);
-    font-weight: 600;
+    font-weight: 600; /* Bolder status */
     margin-bottom: 0;
-    color: var(--accent-color);
+    color: var(--accent-color); /* Default to accent, overridden by state */
     transition: color 0.5s ease;
-    line-height: 1.3; /* Slightly more line height */
+    line-height: 1.3;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); /* Stronger shadow for status */
 }
-.status i { margin-right: 8px; } /* More spacing */
+.status i { margin-right: 8px; }
 
 .details p, .forecast p, .current-weather p {
     font-size: var(--font-size-details);
-    line-height: 1.5; /* More line height */
-    color: #444;
-    margin-bottom: clamp(3px, 0.8vh, 8px); /* More gap */
+    line-height: 1.5;
+    color: var(--text-color); /* Main light text color */
+    margin-bottom: clamp(3px, 0.8vh, 8px);
+}
+.details strong, .forecast strong, .current-weather strong {
+    font-weight: 600; /* Bolder emphasis */
+    color: var(--header-text-color); /* Brighter white for emphasized text */
 }
 
 .forecast, .current-weather {
     margin-top: clamp(8px, 1.2vh, 15px);
     padding-top: clamp(8px, 1.2vh, 15px);
-    border-top: 1px solid rgba(0, 0, 0, 0.1); /* Slightly darker border */
+    border-top: 1px solid rgba(255, 255, 255, 0.15); /* Lighter border inside card */
     width: 90%;
 }
-.current-weather { font-size: var(--font-size-current); color: #666; }
+.current-weather { font-size: var(--font-size-current); color: var(--text-color-medium); }
 .current-weather i { margin-right: 5px; color: var(--accent-color); }
-.current-weather img { vertical-align: middle; height: clamp(18px, 2.2vh, 22px); width: clamp(18px, 2.2vh, 22px); margin-left: 5px; } /* Scale icon slightly */
+.current-weather img { vertical-align: middle; height: clamp(18px, 2.2vh, 22px); width: clamp(18px, 2.2vh, 22px); margin-left: 5px; filter: brightness(1.1); } /* Slightly brighten weather icons */
 
 .last-updated {
     margin-top: clamp(8px, 1.5vh, 15px);
     font-size: var(--font-size-updated);
-    color: #888;
+    color: var(--text-color-low); /* Use lower emphasis color */
     font-style: italic;
 }
 
-/* --- Dynamic Styling based on Weather State --- */
+/* --- Dynamic Styling based on Weather State (Vivid Colors) --- */
 body.state-clear { background: var(--bg-clear); }
 body.state-rain-soon { background: var(--bg-rain-soon); }
 body.state-raining { background: var(--bg-raining); }
 
-.weather-card.state-clear .status h2 { color: #2E8B57; }
-.weather-card.state-rain-soon .status h2 { color: #DAA520; }
-.weather-card.state-raining .status h2 { color: #4169E1; }
+.weather-card.state-clear .status h2 { color: var(--accent-clear); }
+.weather-card.state-rain-soon .status h2 { color: var(--accent-rain-soon); }
+.weather-card.state-raining .status h2 { color: var(--accent-raining); }
 
 /* --- Error State --- */
 .error {
     gap: clamp(8px, 2vh, 15px);
-    color: var(--error-color);
-    padding: 15px; /* More padding */
+    color: var(--error-color); /* Use bright error color variable */
+    padding: 15px;
 }
-.error i { font-size: clamp(2em, 5vh, 3em); } /* Larger icon */
-.error p { font-weight: 600; font-size: var(--font-size-details); }
-.error span { font-size: var(--font-size-updated); color: #555; }
+.error i { font-size: clamp(2em, 5vh, 3em); }
+.error p { font-weight: 600; font-size: var(--font-size-details); color: #fff; } /* White error message */
+.error span { font-size: var(--font-size-updated); color: var(--text-color-medium); } /* Medium light grey details */
 
 /* Footer Styling */
 .app-footer {
@@ -223,34 +236,32 @@ body.state-raining { background: var(--bg-raining); }
     margin-top: auto;
     padding: var(--footer-padding-vertical) 10px;
     font-size: var(--font-size-footer);
-    color: rgba(255, 255, 255, 0.75);
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    color: var(--text-color-medium); /* Medium light grey */
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
     width: 100%;
     flex-shrink: 0;
+    opacity: 0.8;
 }
 .app-footer p { margin: 0; }
 
 /* --- Transitions --- */
 #content, #loading, #error { transition: opacity 0.4s ease-in-out; }
 
-/* --- Height-Based Adjustments (Keep these for short screens) --- */
+/* --- Height-Based Adjustments (Inherited, check contrast if needed) --- */
 @media (max-height: 550px) {
-    :root {
-        /* Override clamped variables for very short screens */
+    :root { /* Ensure sufficient min font size for readability */
         --base-vertical-space: 8px;
         --header-bottom-margin: 8px;
         --card-padding-vertical: 10px;
-         --card-padding-horizontal: clamp(15px, 3vw, 25px); /* Adjust horizontal too */
+         --card-padding-horizontal: clamp(15px, 3vw, 25px);
         --footer-padding-vertical: 5px;
-
-        /* Reduce MAX values significantly for short screens */
         --font-size-business: clamp(1em, 2vh, 1.2em);
         --font-size-appname: clamp(1.3em, 2.8vh, 1.6em);
         --font-size-purpose: clamp(0.7em, 1.5vh, 0.8em);
-        --font-size-status: clamp(1.1em, 2.5vh, 1.4em);
+        --font-size-status: clamp(1.2em, 2.6vh, 1.5em); /* Adjusted min */
         --font-size-location: clamp(0.8em, 1.8vh, 0.9em);
-        --font-size-details: clamp(0.75em, 1.6vh, 0.85em);
-        --font-size-current: clamp(0.7em, 1.5vh, 0.8em);
+        --font-size-details: clamp(0.8em, 1.7vh, 0.9em); /* Adjusted min */
+        --font-size-current: clamp(0.75em, 1.6vh, 0.85em); /* Adjusted min */
         --font-size-updated: clamp(0.65em, 1.3vh, 0.7em);
         --font-size-footer: clamp(0.65em, 1.3vh, 0.75em);
     }
@@ -264,62 +275,45 @@ body.state-raining { background: var(--bg-raining); }
     .app-purpose { display: none; }
      :root {
         --font-size-appname: clamp(1.1em, 2.5vh, 1.4em);
-        --font-size-status: clamp(1em, 2.2vh, 1.2em);
+        --font-size-status: clamp(1.1em, 2.4vh, 1.3em); /* Adjusted min */
      }
 }
 
-/* --- Width-Based Adjustments (NEW: For Larger Screens) --- */
-
-/* Tablets and Small Laptops */
+/* --- Width-Based Adjustments (Inherited from previous step) --- */
 @media (min-width: 768px) {
     :root {
-        /* Allow slightly larger maximums than mobile default */
         --font-size-appname: clamp(1.8em, 4vh, 3em);
         --font-size-purpose: clamp(0.9em, 1.9vh, 1.1em);
-        --font-size-status: clamp(1.5em, 3.5vh, 2.6em);
+        --font-size-status: clamp(1.6em, 3.8vh, 2.8em); /* Adjusted */
         --font-size-location: clamp(1em, 2.2vh, 1.3em);
-        --font-size-details: clamp(0.9em, 1.9vh, 1.1em);
-        --font-size-current: clamp(0.85em, 1.8vh, 1.05em);
+        --font-size-details: clamp(0.95em, 2vh, 1.15em); /* Adjusted */
+        --font-size-current: clamp(0.9em, 1.9vh, 1.1em); /* Adjusted */
     }
-    .weather-card {
-        max-width: 650px; /* Wider card */
-    }
+    .weather-card { max-width: 650px; }
 }
-
-/* Standard Laptops / Desktops */
 @media (min-width: 1024px) {
     :root {
-        /* Increase maximums further */
         --font-size-business: clamp(1.4em, 2.5vh, 2em);
         --font-size-appname: clamp(2em, 4.5vh, 3.5em);
         --font-size-purpose: clamp(1em, 2vh, 1.15em);
-        --font-size-status: clamp(1.8em, 4vh, 3em);
+        --font-size-status: clamp(2em, 4.2vh, 3.2em); /* Adjusted */
         --font-size-location: clamp(1.1em, 2.5vh, 1.4em);
-        --font-size-details: clamp(1em, 2vh, 1.15em);
-        --font-size-current: clamp(0.9em, 1.9vh, 1.1em);
-         --font-size-footer: clamp(0.8em, 1.6vh, 0.95em);
-         --card-padding-vertical: clamp(20px, 3.5vh, 45px);
-         --card-padding-horizontal: clamp(25px, 6vw, 55px);
+        --font-size-details: clamp(1.05em, 2.1vh, 1.2em); /* Adjusted */
+        --font-size-current: clamp(0.95em, 2vh, 1.15em); /* Adjusted */
+        --font-size-footer: clamp(0.8em, 1.6vh, 0.95em);
+        --card-padding-vertical: clamp(20px, 3.5vh, 45px);
+        --card-padding-horizontal: clamp(25px, 6vw, 55px);
     }
-    .weather-card {
-        max-width: 750px; /* Even wider card */
-    }
-     .app-purpose {
-         max-width: 700px; /* Wider paragraph */
-     }
+    .weather-card { max-width: 750px; }
+    .app-purpose { max-width: 700px; }
 }
-
-/* Larger Desktops */
 @media (min-width: 1440px) {
      :root {
-        /* Optional: Even larger if needed */
         --font-size-appname: clamp(2.2em, 5vh, 4em);
-        --font-size-status: clamp(2em, 4.5vh, 3.4em);
+        --font-size-status: clamp(2.2em, 4.8vh, 3.6em); /* Adjusted */
         --font-size-location: clamp(1.2em, 2.8vh, 1.6em);
-        --font-size-details: clamp(1.05em, 2.2vh, 1.25em);
-        --font-size-current: clamp(0.95em, 2.1vh, 1.2em);
+        --font-size-details: clamp(1.1em, 2.3vh, 1.3em); /* Adjusted */
+        --font-size-current: clamp(1em, 2.2vh, 1.25em); /* Adjusted */
      }
-    .weather-card {
-        max-width: 800px; /* Max width for very large screens */
-    }
+    .weather-card { max-width: 800px; }
 }
