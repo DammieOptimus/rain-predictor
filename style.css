@@ -1,34 +1,38 @@
 :root {
+    /* Base Values (Mobile First) */
     --bg-clear: linear-gradient(to bottom, #87CEEB, #5F9EA0);
     --bg-rain-soon: linear-gradient(to bottom, #B0C4DE, #778899);
     --bg-raining: linear-gradient(to bottom, #708090, #4682B4);
     --bg-loading: linear-gradient(to bottom, #f0f0f0, #dcdcdc);
-    --card-bg: rgba(255, 255, 255, 0.88); /* Slightly more opaque */
+    --card-bg: rgba(255, 255, 255, 0.88);
     --text-color: #333;
     --text-color-light: #f8f8f8;
     --header-text-color: rgba(255, 255, 255, 0.95);
     --accent-color: #4682B4;
     --error-color: #DC143C;
-    --shadow: 0 8px 20px rgba(0, 0, 0, 0.12); /* Slightly softer shadow */
+    --shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
     --text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    --border-radius: 12px; /* Slightly smaller radius */
+    --border-radius: 15px; /* Slightly larger radius again */
 
     /* Define base vertical padding/margin using vh but clamp it */
-    --base-vertical-space: clamp(10px, 2vh, 25px);
-    --header-bottom-margin: clamp(10px, 2.5vh, 30px);
-    --card-padding-vertical: clamp(15px, 2.5vh, 30px);
+    /* Keep minimums small, allow decent maximums */
+    --base-vertical-space: clamp(10px, 2vh, 30px);
+    --header-bottom-margin: clamp(10px, 2.5vh, 40px);
+    --card-padding-vertical: clamp(15px, 3vh, 35px); /* Allow more vertical padding */
+    --card-padding-horizontal: clamp(15px, 5vw, 45px); /* Allow more horizontal padding */
     --footer-padding-vertical: clamp(8px, 1.5vh, 20px);
 
      /* Define base font sizes using vw/vh but clamp them */
-    --font-size-business: clamp(1.1em, 2.2vh, 1.6em);
-    --font-size-appname: clamp(1.5em, 3vh, 2.2em);
-    --font-size-purpose: clamp(0.8em, 1.8vh, 0.95em);
-    --font-size-status: clamp(1.3em, 2.8vh, 1.8em);
-    --font-size-location: clamp(0.9em, 1.9vh, 1.1em);
-    --font-size-details: clamp(0.8em, 1.7vh, 0.95em);
-    --font-size-current: clamp(0.75em, 1.6vh, 0.9em);
-    --font-size-updated: clamp(0.7em, 1.4vh, 0.8em);
-    --font-size-footer: clamp(0.7em, 1.4vh, 0.85em);
+     /* Increased MAX values significantly */
+    --font-size-business: clamp(1.1em, 2.2vh, 1.8em);
+    --font-size-appname: clamp(1.5em, 3.5vh, 2.8em); /* Much larger max */
+    --font-size-purpose: clamp(0.8em, 1.8vh, 1.05em); /* Larger max */
+    --font-size-status: clamp(1.3em, 3vh, 2.4em);    /* Much larger max */
+    --font-size-location: clamp(0.9em, 2vh, 1.2em);  /* Larger max */
+    --font-size-details: clamp(0.8em, 1.8vh, 1.05em); /* Larger max */
+    --font-size-current: clamp(0.75em, 1.7vh, 1em); /* Larger max */
+    --font-size-updated: clamp(0.7em, 1.5vh, 0.85em);
+    --font-size-footer: clamp(0.7em, 1.5vh, 0.9em);
 }
 
 * {
@@ -38,8 +42,8 @@
 }
 
 html, body {
-    height: 100%; /* Ensure html and body take full height */
-    overflow: hidden; /* Prevent scrollbars at the highest level */
+    height: 100%;
+    overflow: hidden; /* Still attempt no-scroll */
 }
 
 body {
@@ -47,22 +51,21 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* min-height: 100vh; height: 100% is preferred with overflow:hidden */
     background: var(--bg-loading);
     color: var(--text-color);
     transition: background 0.8s ease-in-out;
-    padding: 0 5px; /* Small horizontal padding */
+    padding: 0 10px; /* Slightly more base horizontal padding */
 }
 
 /* Header Section Styling */
 .app-header {
     text-align: center;
     width: 95%;
-    max-width: 700px;
+    max-width: 800px; /* Allow header text to span wider */
     margin-top: var(--base-vertical-space);
     margin-bottom: var(--header-bottom-margin);
     color: var(--header-text-color);
-    flex-shrink: 0; /* Prevent header from shrinking */
+    flex-shrink: 0;
 }
 
 .business-name {
@@ -70,7 +73,7 @@ body {
     font-weight: 700;
     text-shadow: var(--text-shadow);
     letter-spacing: 0.5px;
-    margin-bottom: clamp(2px, 0.5vh, 5px); /* Very small space */
+    margin-bottom: clamp(3px, 0.5vh, 8px);
     opacity: 0.9;
 }
 
@@ -78,17 +81,17 @@ body {
     font-size: var(--font-size-appname);
     font-weight: 600;
     text-shadow: var(--text-shadow);
-    margin-bottom: clamp(5px, 1.5vh, 15px);
+    margin-bottom: clamp(8px, 1.5vh, 20px);
     color: white;
 }
 
 .app-purpose {
     font-size: var(--font-size-purpose);
     font-weight: 300;
-    line-height: 1.5; /* Adjusted line height */
+    line-height: 1.6;
     opacity: 0.9;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-    max-width: 550px;
+    max-width: 650px; /* Wider paragraph allowed */
     margin-left: auto;
     margin-right: auto;
 }
@@ -97,61 +100,61 @@ body {
 .container {
     display: flex;
     justify-content: center;
-    align-items: center; /* Center card vertically */
+    align-items: center;
     width: 100%;
-    flex-grow: 1; /* Allow container to take up remaining space */
-    overflow: hidden; /* Hide overflow within the container */
-    min-height: 0; /* Important for flex-grow in some browsers */
-    padding: 5px 0; /* Small vertical padding */
+    flex-grow: 1;
+    overflow: hidden;
+    min-height: 0;
+    padding: 10px 0; /* More vertical padding */
 }
 
 .weather-card {
     background: var(--card-bg);
-    padding: var(--card-padding-vertical) clamp(15px, 5vw, 40px); /* Vertical padding uses clamped var */
+    padding: var(--card-padding-vertical) var(--card-padding-horizontal); /* Use vars */
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     text-align: center;
-    min-width: 280px; /* Reduce min-width */
-    max-width: 480px; /* Reduce max-width */
-    width: 90%;
-    backdrop-filter: blur(4px); /* Slightly less blur */
-    transition: background 0.5s ease;
-    overflow: hidden; /* Prevent internal overflow */
-    /* Removed margin-top, container alignment handles it */
-    max-height: 95%; /* Limit card height relative to container */
-    display: flex; /* Use flex to manage internal content */
+    /* Adjust widths based on screen size */
+    min-width: 290px;
+    width: 90%; /* Default relative width */
+    max-width: 500px; /* Default max-width (mobile/tablet) */
+    backdrop-filter: blur(4px);
+    transition: background 0.5s ease, max-width 0.3s ease; /* Added max-width transition */
+    overflow: hidden;
+    max-height: 95%;
+    display: flex;
     flex-direction: column;
-    justify-content: center; /* Center content vertically in card */
+    justify-content: center;
 }
 
 /* --- Loading/Content/Error Switching --- */
-/* Make sure only one state is visible */
-#loading, #content, #error { display: none; } /* Hide all by default */
-#weather-card > div { /* Style direct children */
-     flex-grow: 1; /* Allow the visible div to grow */
-     display: flex; /* Use flex inside each state view */
+#loading, #content, #error { display: none; }
+#weather-card > div {
+     flex-grow: 1;
+     display: flex;
      flex-direction: column;
      justify-content: center;
      align-items: center;
      width: 100%;
+     padding: 5px 0; /* Internal padding for breathing room */
 }
 /* JS will set the correct one to display: flex */
 
 
 /* --- Loading State --- */
 .loading {
-    gap: clamp(8px, 2vh, 15px);
+    gap: clamp(10px, 2vh, 20px); /* More gap */
     font-size: var(--font-size-details);
     color: #555;
 }
 .loading i {
-    font-size: clamp(1.8em, 4vh, 2.5em);
+    font-size: clamp(2em, 5vh, 3.5em); /* Larger spinner */
     color: var(--accent-color);
 }
 
 /* --- Content Styling --- */
 .content {
-    gap: clamp(5px, 1.5vh, 15px); /* Reduced gap */
+    gap: clamp(8px, 1.8vh, 18px); /* Increased gap */
 }
 
 .location {
@@ -159,37 +162,37 @@ body {
     font-weight: 300;
     color: #555;
 }
-.location i { margin-right: 5px; color: var(--accent-color); }
+.location i { margin-right: 7px; color: var(--accent-color); } /* More spacing */
 
 .status h2 {
     font-size: var(--font-size-status);
     font-weight: 600;
-    margin-bottom: 0; /* Removed margin */
+    margin-bottom: 0;
     color: var(--accent-color);
     transition: color 0.5s ease;
-    line-height: 1.2; /* Tighter line height */
+    line-height: 1.3; /* Slightly more line height */
 }
-.status i { margin-right: 5px; }
+.status i { margin-right: 8px; } /* More spacing */
 
 .details p, .forecast p, .current-weather p {
     font-size: var(--font-size-details);
-    line-height: 1.4; /* Tighter */
+    line-height: 1.5; /* More line height */
     color: #444;
-    margin-bottom: clamp(2px, 0.5vh, 5px); /* Small gap */
+    margin-bottom: clamp(3px, 0.8vh, 8px); /* More gap */
 }
 
 .forecast, .current-weather {
-    margin-top: clamp(5px, 1vh, 10px); /* Reduced margin */
-    padding-top: clamp(5px, 1vh, 10px); /* Reduced padding */
-    border-top: 1px solid rgba(0, 0, 0, 0.08); /* Lighter border */
-    width: 90%; /* Limit width slightly */
+    margin-top: clamp(8px, 1.2vh, 15px);
+    padding-top: clamp(8px, 1.2vh, 15px);
+    border-top: 1px solid rgba(0, 0, 0, 0.1); /* Slightly darker border */
+    width: 90%;
 }
 .current-weather { font-size: var(--font-size-current); color: #666; }
-.current-weather i { margin-right: 4px; color: var(--accent-color); }
-.current-weather img { vertical-align: middle; height: 18px; width: 18px; margin-left: 3px; }
+.current-weather i { margin-right: 5px; color: var(--accent-color); }
+.current-weather img { vertical-align: middle; height: clamp(18px, 2.2vh, 22px); width: clamp(18px, 2.2vh, 22px); margin-left: 5px; } /* Scale icon slightly */
 
 .last-updated {
-    margin-top: clamp(5px, 1vh, 10px); /* Reduced margin */
+    margin-top: clamp(8px, 1.5vh, 15px);
     font-size: var(--font-size-updated);
     color: #888;
     font-style: italic;
@@ -206,73 +209,117 @@ body.state-raining { background: var(--bg-raining); }
 
 /* --- Error State --- */
 .error {
-    gap: clamp(5px, 1.5vh, 10px);
+    gap: clamp(8px, 2vh, 15px);
     color: var(--error-color);
-    padding: 10px;
+    padding: 15px; /* More padding */
 }
-.error i { font-size: clamp(1.8em, 4vh, 2.5em); }
+.error i { font-size: clamp(2em, 5vh, 3em); } /* Larger icon */
 .error p { font-weight: 600; font-size: var(--font-size-details); }
 .error span { font-size: var(--font-size-updated); color: #555; }
 
 /* Footer Styling */
 .app-footer {
     text-align: center;
-    margin-top: auto; /* Keep footer pushed down */
-    padding: var(--footer-padding-vertical) 10px; /* Use clamped var */
+    margin-top: auto;
+    padding: var(--footer-padding-vertical) 10px;
     font-size: var(--font-size-footer);
     color: rgba(255, 255, 255, 0.75);
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
     width: 100%;
-    flex-shrink: 0; /* Prevent footer from shrinking */
+    flex-shrink: 0;
 }
 .app-footer p { margin: 0; }
 
 /* --- Transitions --- */
-#content, #loading, #error { transition: opacity 0.4s ease-in-out; } /* Faster transition */
+#content, #loading, #error { transition: opacity 0.4s ease-in-out; }
 
-/* --- Height-Based Adjustments --- */
-/* Example: Very short screens */
+/* --- Height-Based Adjustments (Keep these for short screens) --- */
 @media (max-height: 550px) {
     :root {
         /* Override clamped variables for very short screens */
         --base-vertical-space: 8px;
         --header-bottom-margin: 8px;
         --card-padding-vertical: 10px;
+         --card-padding-horizontal: clamp(15px, 3vw, 25px); /* Adjust horizontal too */
         --footer-padding-vertical: 5px;
 
-        --font-size-business: 1em;
-        --font-size-appname: 1.3em;
-        --font-size-purpose: 0.7em;
-        --font-size-status: 1.1em;
-        --font-size-location: 0.8em;
-        --font-size-details: 0.75em;
-        --font-size-current: 0.7em;
-        --font-size-updated: 0.65em;
-        --font-size-footer: 0.65em;
+        /* Reduce MAX values significantly for short screens */
+        --font-size-business: clamp(1em, 2vh, 1.2em);
+        --font-size-appname: clamp(1.3em, 2.8vh, 1.6em);
+        --font-size-purpose: clamp(0.7em, 1.5vh, 0.8em);
+        --font-size-status: clamp(1.1em, 2.5vh, 1.4em);
+        --font-size-location: clamp(0.8em, 1.8vh, 0.9em);
+        --font-size-details: clamp(0.75em, 1.6vh, 0.85em);
+        --font-size-current: clamp(0.7em, 1.5vh, 0.8em);
+        --font-size-updated: clamp(0.65em, 1.3vh, 0.7em);
+        --font-size-footer: clamp(0.65em, 1.3vh, 0.75em);
     }
-    .app-purpose { line-height: 1.4; } /* Tighten further */
-    .forecast, .current-weather { padding-top: 5px; margin-top: 5px; }
-    .last-updated { margin-top: 5px; }
-    .current-weather img { height: 16px; width: 16px; }
-    .loading i, .error i { font-size: 1.6em; }
+     .app-purpose { line-height: 1.4; }
+     .forecast, .current-weather { padding-top: 5px; margin-top: 5px; }
+     .last-updated { margin-top: 5px; }
+     .current-weather img { height: 16px; width: 16px; }
+     .loading i, .error i { font-size: clamp(1.6em, 3.5vh, 2em); }
 }
-
-/* Optional: Hide purpose paragraph on extremely short screens */
 @media (max-height: 450px) {
-    .app-purpose {
-       display: none; /* Hide purpose if space is extremely limited */
-    }
-     :root { /* Further reduction */
-        --font-size-business: 0.9em;
-        --font-size-appname: 1.1em;
-        --font-size-status: 1em;
-        --font-size-location: 0.75em;
+    .app-purpose { display: none; }
+     :root {
+        --font-size-appname: clamp(1.1em, 2.5vh, 1.4em);
+        --font-size-status: clamp(1em, 2.2vh, 1.2em);
      }
 }
 
-/* Standard Width-Based Responsive (Keep these too) */
-@media (max-width: 480px) {
+/* --- Width-Based Adjustments (NEW: For Larger Screens) --- */
+
+/* Tablets and Small Laptops */
+@media (min-width: 768px) {
+    :root {
+        /* Allow slightly larger maximums than mobile default */
+        --font-size-appname: clamp(1.8em, 4vh, 3em);
+        --font-size-purpose: clamp(0.9em, 1.9vh, 1.1em);
+        --font-size-status: clamp(1.5em, 3.5vh, 2.6em);
+        --font-size-location: clamp(1em, 2.2vh, 1.3em);
+        --font-size-details: clamp(0.9em, 1.9vh, 1.1em);
+        --font-size-current: clamp(0.85em, 1.8vh, 1.05em);
+    }
     .weather-card {
-        min-width: unset; /* Allow it to be smaller */
+        max-width: 650px; /* Wider card */
+    }
+}
+
+/* Standard Laptops / Desktops */
+@media (min-width: 1024px) {
+    :root {
+        /* Increase maximums further */
+        --font-size-business: clamp(1.4em, 2.5vh, 2em);
+        --font-size-appname: clamp(2em, 4.5vh, 3.5em);
+        --font-size-purpose: clamp(1em, 2vh, 1.15em);
+        --font-size-status: clamp(1.8em, 4vh, 3em);
+        --font-size-location: clamp(1.1em, 2.5vh, 1.4em);
+        --font-size-details: clamp(1em, 2vh, 1.15em);
+        --font-size-current: clamp(0.9em, 1.9vh, 1.1em);
+         --font-size-footer: clamp(0.8em, 1.6vh, 0.95em);
+         --card-padding-vertical: clamp(20px, 3.5vh, 45px);
+         --card-padding-horizontal: clamp(25px, 6vw, 55px);
+    }
+    .weather-card {
+        max-width: 750px; /* Even wider card */
+    }
+     .app-purpose {
+         max-width: 700px; /* Wider paragraph */
+     }
+}
+
+/* Larger Desktops */
+@media (min-width: 1440px) {
+     :root {
+        /* Optional: Even larger if needed */
+        --font-size-appname: clamp(2.2em, 5vh, 4em);
+        --font-size-status: clamp(2em, 4.5vh, 3.4em);
+        --font-size-location: clamp(1.2em, 2.8vh, 1.6em);
+        --font-size-details: clamp(1.05em, 2.2vh, 1.25em);
+        --font-size-current: clamp(0.95em, 2.1vh, 1.2em);
+     }
+    .weather-card {
+        max-width: 800px; /* Max width for very large screens */
     }
 }
